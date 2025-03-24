@@ -89,6 +89,18 @@
         .like-button:hover {
             color: #e84362;
         }
+        .delete-button {
+            background: transparent;
+            border: none;
+            color: #d9534f;
+            font-weight: bold;
+            cursor: pointer;
+            margin-left: 10px;
+            font-size: 14px;
+        }
+        .delete-button:hover {
+            color: #b52b27;
+        }
     </style>
 </head>
 <body>
@@ -122,6 +134,7 @@
             let content = `<strong>${writerName}</strong>
                            <p>${text}</p>
                            <button class='like-button' onclick='likePost(this)'>❤️ Like (<span>0</span>)</button>
+                           <button class='delete-button' onclick='deletePost(this)'>🗑️ Delete</button>
                            <textarea placeholder='Write a comment...'></textarea>
                            <button onclick='postComment(this)'>💬 Comment</button>
                            <div class='comment-list'></div>`;
@@ -164,6 +177,11 @@
             let likeCountSpan = button.querySelector('span');
             let likeCount = parseInt(likeCountSpan.textContent, 10);
             likeCountSpan.textContent = likeCount + 1;
+        }
+
+        function deletePost(button) {
+            let post = button.parentElement;
+            post.remove();
         }
     </script>
 </body>
