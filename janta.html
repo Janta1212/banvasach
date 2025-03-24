@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Feelings</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to right, #ff9a9e, #fad0c4);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            width: 90%;
+            max-width: 700px;
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+        h1 {
+            color: #e84362;
+            font-size: 28px;
+            margin-bottom: 15px;
+        }
+        h2 {
+            color: #333;
+        }
+        textarea, input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ccc;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+        button {
+            background: #ff758c;
+            color: white;
+            border: none;
+            padding: 12px 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background: #e84362;
+        }
+        .comments {
+            margin-top: 20px;
+            text-align: left;
+        }
+        .comment {
+            background: #f8d7da;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            position: relative;
+        }
+        .comment textarea {
+            width: calc(100% - 20px);
+            height: 50px;
+            margin-top: 10px;
+            border-radius: 5px;
+            padding: 5px;
+        }
+        .comment img {
+            max-width: 100%;
+            border-radius: 10px;
+            margin-top: 10px;
+        }
+        .like-button {
+            background: transparent;
+            border: none;
+            color: #ff758c;
+            font-weight: bold;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            font-size: 14px;
+        }
+        .like-button:hover {
+            color: #e84362;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📖 Welcome to Book Feelings!</h1>
+        <h2>📚 Share Your Feelings About a Book</h2>
+        <input type="text" id="writerName" placeholder="Your name...">
+        <textarea id="feeling" placeholder="Write your thoughts here..."></textarea>
+        <input type="file" id="imageUpload" accept="image/*">
+        <button onclick="postFeeling()">📢 Post</button>
+        <div class="comments" id="comments"></div>
+    </div>
+
+    <script>
+        function postFeeling() {
+            let writerName = document.getElementById('writerName').value.trim();
+            let textarea = document.getElementById('feeling');
+            let imageInput = document.getElementById('imageUpload');
+            let comments = document.getElementById('comments');
+            let text = textarea.value.trim();
+            let imageFile = imageInput.files[0];
+
+            if (writerName === '' || (text === '' && !imageFile)) {
+                alert('Please enter your name and write something or upload an image before posting!');
+                return;
+            }
+            
+            let commentDiv = document.createElement('div');
+            commentDiv.classList.add('comment');
+            
+            let content = `<strong>${writerName}</strong>
+                           <p>${text}</p>
+                           <button class='like-button' onclick='likePost(this)'>❤️ Like (<span>0</span>)</button>
+                           <textarea placeholder='Write a comment...'></textarea>
+                           <button onclick='postComment(this)'>💬 Comment</button>
+                           <div class='comment-list'></div>`;
+
+            if (imageFile) {
+                let reader = new FileReader();
+                reader.onload = function(e) {
+                    let img = document.createElement('img');
+                    img.src = e.target.result;
+                    commentDiv.appendChild(img);
+                };
+                reader.readAsDataURL(imageFile);
+            }
+            
+            commentDiv.innerHTML = content;
+            comments.prepend(commentDiv);
+            document.getElementById('writerName').value = '';
+            textarea.value = '';
+            imageInput.value = '';
+        }
+
+        function postComment(button) {
+            let commentBox = button.previousElementSibling;
+            let commentText = commentBox.value.trim();
+            let commentList = button.nextElementSibling;
+
+            if (commentText === '') {
+                alert('Please write a comment before posting!');
+                return;
+            }
+            
+            let newComment = document.createElement('div');
+            newComment.classList.add('comment');
+            newComment.textContent = commentText;
+            commentList.appendChild(newComment);
+            commentBox.value = '';
+        }
+
+        function likePost(button) {
+            let likeCountSpan = button.querySelector('span');
+            let likeCount = parseInt(likeCountSpan.textContent, 10);
+            likeCountSpan.textContent = likeCount + 1;
+        }
+    </script>
+</body>
+</html>
